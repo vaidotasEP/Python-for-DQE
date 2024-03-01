@@ -115,7 +115,6 @@ class News(PostBase):
         self.city = input("Please enter the name of the city: ")
 
     def publish(self):
-        print('~~~publishing~~~')
         self.post_to_newsfeed(
             header=f'.....[{self.post_type}].....',
             body=f'{self.text}\n{self.city}, {self.date:%Y-%m-%d}'
@@ -168,7 +167,7 @@ class PrivateAd(PostBase):
         delta = self.expiration_date - datetime.date.today()
         self.post_to_newsfeed(
             header=f'.....[{self.post_type}].....',
-            body=f'{self.text}\nActual until: {self.expiration_date:%Y-%m-%d}, {delta.days} days left\n'
+            body=f'{self.text}\nActual until: {self.expiration_date:%Y-%m-%d}, {delta.days} days left'
         )
 
 
