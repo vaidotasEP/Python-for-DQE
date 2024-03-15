@@ -132,25 +132,26 @@ def lst_to_sentence(lst: list):
     return normalize_case(sentence)     # and capitalize it
 
 
-my_string = normalize_case(input_str)
-print(my_string)                        # print properly capitalized text
-print()                                 # print an empty line for separation
+if __name__ == "__main__":
+    my_string = normalize_case(input_str)
+    print(my_string)                        # print properly capitalized text
+    print()                                 # print an empty line for separation
 
-my_string = replace(my_string, from_substr='iz', to_substr='is')
-print(my_string)                                    # print properly capitalized text & "iz" corrected text
-print()                                             # print an empty line for separation
+    my_string = replace(my_string, from_substr='iz', to_substr='is')
+    print(my_string)                                    # print properly capitalized text & "iz" corrected text
+    print()                                             # print an empty line for separation
 
-sentence_to_insert = lst_to_sentence(list_last_words(my_string))
-print(sentence_to_insert)                                           # print constructed sentence
+    sentence_to_insert = lst_to_sentence(list_last_words(my_string))
+    print(sentence_to_insert)                                           # print constructed sentence
 
-my_string = insert_str_after(
-    my_string,
-    string_to_insert=sentence_to_insert,
-    target='paragraph.'
-)
-print(my_string)     # print properly capitalized, "iz" corrected text with the added sentence
+    my_string = insert_str_after(
+        my_string,
+        string_to_insert=sentence_to_insert,
+        target='paragraph.'
+    )
+    print(my_string)     # print properly capitalized, "iz" corrected text with the added sentence
 
-print()              # print an empty line for separation
-# print the number of whitespaces found
-print(f'Number of whitespaces found in the original string: {count_whitespaces(input_str)}')
+    print()              # print an empty line for separation
+    # print the number of whitespaces found
+    print(f'Number of whitespaces found in the original string: {count_whitespaces(input_str)}')
 
