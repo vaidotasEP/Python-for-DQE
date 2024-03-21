@@ -111,7 +111,7 @@ class PrivateAd(PostBase):
         pattern = re.compile(r'^(20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$')
         matches = pattern.findall(date_entry)  # we store all the matches in the list "matches"
         if len(matches) == 0:  # if the list is empty, this means no correctly formatted date was found
-            raise ValueError("It is not a date or the date format is wrong.")
+            raise ValueError("It is not a date or the date format is wrong.\n")
         year, month, day = map(int, date_entry.split('-'))
         self.expiration_date = datetime.date(year, month, day)
         if self.expiration_date <= datetime.date.today():
@@ -131,7 +131,7 @@ class PrivateAd(PostBase):
             try:
                 self.validate_expiration_date(date_entry)
             except ValueError as err:
-                print(f'(Warning:) {err}')
+                print(f'Warning: {err}\n')
             else:
                 break
 

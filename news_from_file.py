@@ -1,7 +1,8 @@
 import os
-
+import re
 from news_posts import PostBase
 from utility_funcs import opened_w_error
+from datetime import datetime
 
 class NewsFromFile(PostBase):
     """
@@ -29,12 +30,26 @@ class NewsFromFile(PostBase):
         filename = self.path_to_input_file  # "news.txt"
         with opened_w_error(filename, "r") as (f, err):
             if err:
-                print(f'IOError: {err}')
+                print(f'IOError: {err}\n')
                 return err
             else:
                 txt = f.read()
-                self.content = txt.strip().split('\n')
+                pattern = re.compile(fr'post:\s?((?:\n.+)+)\n*')
+                self.content = re.findall(pattern, txt)
                 return "Ok"
+
+    def write_erroneous_post_to_file(self, content):
+        filename = "invalid_posts.txt"
+        with opened_w_error(filename, "a") as (f, err):
+            if err:
+                print(f'IOError: {err}')
+                return err
+            else:
+                f.write(f'-----[{datetime.now()}]-----\n')
+                for line in content:
+                    f.write('post:\n\t')
+                    f.write(line.strip() + '\n\n')
+
 
     def delete_obsolete_input_file(self, filename: str):
         # Try to delete the file.

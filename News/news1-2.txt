@@ -1,0 +1,23 @@
+---
+post:
+    type: neWs
+    body: KlAiPeDa CelebrateS tHe stArt of the International Book Fair "KlAiPeDa Knygu Muge 2024".
+    city: KlAiPeDa
+
+post:
+    type: Private AD
+    body: Want to exchange.
+    model: FeRRari F1, (
+    Color: rEd), to something more reasonable (some other color).
+    expiration: 2024-05-30
+
+post:
+    type: WorD OF The DaY
+    word: HegeMONY
+    meaning: > (n.) Hegemony refers to influence
+    or
+    control
+    over
+    another
+    country,
+    group of people, etc.

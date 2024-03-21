@@ -1,12 +1,24 @@
-neWs
-Kaunas CelebrateS tHe stArt of the International Book Fair "Kaunas Knygu Muge 2024".
-VilNius
+---
+post:
+    type: neWs
+    body: Kaunas CelebrateS tHe stArt of the International Book Fair "Kaunas Knygu Muge 2024".
+    city: VilNius
 
-Private AD
-Want to acquire. model: Aston Martin DBX, Color: silveR.
-2024-05-30
+post:
+    type: Private AD
+    body: Want to acquire. model: Aston Martin DBX, Color: silveR.
+    expiration: 2024-03-15
 
-WorD OF The DaY
-onoMATOpoeia
-(n.) the formation of a wORd from a sound AssociateD wITh what is named (e.g. cuckoo, sizzle).
-the use of onomatopoeia for literary effect.
+post:
+    type: Private AD
+    body: Want to exchange. model: Aston Martin DBX, Color: silveR, to model: Toyota RAV4, color: blue.
+    expiration: 2023-02-29
+
+post:
+    type: WorD OF The DaY
+    word: onoMATOpoeia
+    meaning: > (n.) the formation of a wORd from a sound AssociateD wITh what is named (e.g. cuckoo, sizzle).
+        the use of onomatopoeia for literary effect.
+
+post:
+    oh-oh-oh

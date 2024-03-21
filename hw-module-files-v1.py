@@ -1,5 +1,6 @@
 from news_posts import News, PrivateAd, WordOfTheDay
 from news_from_file import NewsFromFile
+import re
 
 
 def show_menu() -> None:
@@ -22,44 +23,53 @@ def show_menu() -> None:
 
 def publish(content):
     i = 0
+    _news = fr'type:\s?(.*)\n\s+body:\s?(.*(?:\r?\n(?!\r?\n).*)*)\s+city:\s?(.*)'
+    _ad = fr'type:\s?(.*)\n\s+body:\s?(.*(?:\r?\n(?!\r?\n).*)*)\s+expiration:\s?(.*)'
+    _word = fr'type:\s?(.*)\n\s+word:\s?(.*(?:\r?\n(?!\r?\n).*)*)\s+meaning:\s?(.*(?:\r?\n(?!\r?\n).*)*)'
+    news_pattern = re.compile(_news)
+    ad_pattern = re.compile(_ad)
+    word_pattern = re.compile(_word)
     try:
         while i < len(content):
-            text_str = content[i].strip().lower()
-
-            if text_str != '':
-                if text_str == 'news':
-                    newsPost.text = content[i+1].strip()
-                    newsPost.city = content[i+2].strip()
-                    newsPost.publish()
-                elif text_str == 'private ad':
-                    privateAd.text = content[i+1].strip()
-                    date_entry = content[i + 2].strip()
-                    try:
-                        privateAd.validate_expiration_date(date_entry)   # validate expiration date
-                    except ValueError as err:
-                        print(f'(Warning:) {err}')
-                        print(f'Aborting news import from text file')
+            post = content[i].strip().lower()
+            news = re.findall(news_pattern, post)
+            ads = re.findall(ad_pattern, post)
+            words = re.findall(word_pattern, post)
+            if news:
+                newsPost.text = news[0][1].strip()
+                newsPost.city = news[0][2].strip()
+                newsPost.publish()
+                content.pop(i)
+            elif ads:
+                privateAd.text = ads[0][1].strip()
+                date_entry = ads[0][2].strip()
+                try:
+                    privateAd.validate_expiration_date(date_entry)   # validate expiration date
+                except ValueError as err:
+                    print(f'\nWarning: {err}\n')
+                    i += 1
+                    continue
+                else:
                     privateAd.publish()
-                elif text_str == 'word of the day':
-                    wordOTD.word = content[i+1].strip()
-                    wordOTD.meaning = content[i+2].strip()
-                    wordOTD.publish()
+                    content.pop(i)
+            elif words:
+                wordOTD.word = words[0][1].strip()
+                wordOTD.meaning = words[0][2].strip()
+                wordOTD.publish()
+                content.pop(i)
             else:
                 i += 1
                 continue
-
-            if (i == 0) and (newsFromFile.input_format == "1"):
+            if newsFromFile.input_format == "1":
                 break
-            else:
-                i += 3
-    except ValueError as err:
-        print(f'(Warning:) {err}')
+    except (ValueError, IndexError) as err:
+        print(f'Error: {err}\n')
     else:
+        if (len(content) > 0) and (newsFromFile.input_format != "1"):
+            print(f'Warning: some records were not posted to the newsfeed. They were coppied to `invalid_posts.txt` file) \n')
+            newsFromFile.write_erroneous_post_to_file(content)
         if i >= len(content):
-            print(f'All news published. Deleting the file `{newsFromFile.path_to_input_file}`\n')
-            newsFromFile.delete_obsolete_input_file(newsFromFile.path_to_input_file)
-        else:
-            print(f'File will not be deleted, as there is some more text that has not been imported.\n')
+            print(f'All valid posts were published. Deleting the file `{newsFromFile.path_to_input_file}`\n\n')
 
 
 # initializing all classes before the loop to save computational resources by initializing them only once
