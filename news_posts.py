@@ -38,11 +38,11 @@ class PostBase(ABC):
         pass
 
     @abstractmethod
-    def publish(self) -> None:
+    def publish(self) -> str:
         """
         Abstract method to publish post to the newsfeed.
         Returns:
-             None
+             str text string containing text that was posted to the
         """
         pass
 
@@ -82,10 +82,13 @@ class News(PostBase):
         self.city = input("Please enter the name of the city: ")
 
     def publish(self):
+        header = f'.....[{self.post_type}].....'
+        body = f'{normalize_case(self.text)}\n{normalize_case(self.city)}, {self.date:%Y-%m-%d}'
         self.post_to_newsfeed(
-            header=f'.....[{self.post_type}].....',
-            body=f'{normalize_case(self.text)}\n{normalize_case(self.city)}, {self.date:%Y-%m-%d}'
+            header=header,
+            body=body
         )
+        return f'{header}\n{body}'
 
 
 class PrivateAd(PostBase):
@@ -137,10 +140,13 @@ class PrivateAd(PostBase):
 
     def publish(self):
         delta = self.expiration_date - datetime.date.today()
+        header = f'.....[{self.post_type}].....'
+        body = f'{normalize_case(self.text)}\nActual until: {self.expiration_date:%Y-%m-%d}, {delta.days} days left'
         self.post_to_newsfeed(
-            header=f'.....[{self.post_type}].....',
-            body=f'{normalize_case(self.text)}\nActual until: {self.expiration_date:%Y-%m-%d}, {delta.days} days left'
+            header=header,
+            body=body
         )
+        return f'{header}\n{body}'
 
 
 class WordOfTheDay(PostBase):
@@ -168,7 +174,10 @@ class WordOfTheDay(PostBase):
 
     def publish(self, **kwargs):
         day_of_year = self.date.timetuple().tm_yday  # we calculate day of year
+        header = f'.....[{self.post_type}].....'
+        body = f'Word #{day_of_year}\nWord: {normalize_case(self.word)}\nMeaning: {normalize_case(self.meaning)}'
         self.post_to_newsfeed(
-            header=f'.....[{self.post_type}].....',
-            body=f'Word #{day_of_year}\nWord: {normalize_case(self.word)}\nMeaning: {normalize_case(self.meaning)}'
+            header=header,
+            body=body
         )
+        return f'{header}\n{body}'

@@ -1,5 +1,7 @@
 from news_posts import News, PrivateAd, WordOfTheDay
 from news_from_file import NewsFromFile
+from utility_funcs import read_posts_from_file
+from csv_counters import BaseCounter
 import re
 
 
@@ -23,6 +25,7 @@ def show_menu() -> None:
 
 def publish(content):
     i = 0
+    txt = ''
     _news = fr'type:\s?(.*)\n\s+body:\s?(.*(?:\r?\n(?!\r?\n).*)*)\s+city:\s?(.*)'
     _ad = fr'type:\s?(.*)\n\s+body:\s?(.*(?:\r?\n(?!\r?\n).*)*)\s+expiration:\s?(.*)'
     _word = fr'type:\s?(.*)\n\s+word:\s?(.*(?:\r?\n(?!\r?\n).*)*)\s+meaning:\s?(.*(?:\r?\n(?!\r?\n).*)*)'
@@ -38,7 +41,7 @@ def publish(content):
             if news:
                 newsPost.text = news[0][1].strip()
                 newsPost.city = news[0][2].strip()
-                newsPost.publish()
+                txt = newsPost.publish()
                 content.pop(i)
             elif ads:
                 privateAd.text = ads[0][1].strip()
@@ -50,12 +53,12 @@ def publish(content):
                     i += 1
                     continue
                 else:
-                    privateAd.publish()
+                    txt = privateAd.publish()
                     content.pop(i)
             elif words:
                 wordOTD.word = words[0][1].strip()
                 wordOTD.meaning = words[0][2].strip()
-                wordOTD.publish()
+                txt = wordOTD.publish()
                 content.pop(i)
             else:
                 i += 1
@@ -70,6 +73,7 @@ def publish(content):
             newsFromFile.write_erroneous_post_to_file(content)
         if i >= len(content):
             print(f'All valid posts were published. Deleting the file `{newsFromFile.path_to_input_file}`\n\n')
+    return txt
 
 
 # initializing all classes before the loop to save computational resources by initializing them only once
@@ -78,23 +82,34 @@ privateAd = PrivateAd()
 wordOTD = WordOfTheDay()
 newsFromFile = NewsFromFile()
 
+counter = BaseCounter()
+content = read_posts_from_file('newsfeed.txt')
+counter.add_words(content)
+counter.csv_update_counts()
+
 while True:      # we start an "infinite loop", which can be terminated by pressing "Q"
+    txt = ''
     show_menu()
     user_input = input("\nPlease enter your choice: ")
     if user_input == "1":
         newsPost.ask_required_data()
-        newsPost.publish()
+        txt = newsPost.publish()
     elif user_input == "2":
         privateAd.ask_required_data()
-        privateAd.publish()
+        txt = privateAd.publish()
     elif user_input == "3":
         wordOTD.ask_required_data()
-        wordOTD.publish()
+        txt = wordOTD.publish()
     elif user_input == "4":
         newsFromFile.ask_required_data()
         if newsFromFile.read_posts_from_file() == "Ok":
-            publish(newsFromFile.content)
+            txt = publish(newsFromFile.content)
     elif user_input.upper() == "Q":
         break
     else:
         print("That's not a valid choice!")
+
+    if txt:
+        # print(f'Adding new stuff: \n{txt}')
+        counter.add_words(txt)
+        counter.csv_update_counts()
