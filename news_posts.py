@@ -172,7 +172,7 @@ class WordOfTheDay(PostBase):
         self.word = input("Enter word of the day: ")
         self.meaning = input(f'Enter the definition for "{self.word}": ')
 
-    def publish(self, **kwargs):
+    def publish(self, *args):
         day_of_year = self.date.timetuple().tm_yday  # we calculate day of year
         header = f'.....[{self.post_type}].....'
         body = f'Word #{day_of_year}\nWord: {normalize_case(self.word)}\nMeaning: {normalize_case(self.meaning)}'
