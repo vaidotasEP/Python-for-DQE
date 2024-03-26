@@ -4,6 +4,7 @@ from news_posts import PostBase
 from utility_funcs import opened_w_error
 from datetime import datetime
 
+
 class NewsFromFile(PostBase):
     """
     NewsFromFile class, inherits from PostBase. It is a post or number of posts read from a text file.

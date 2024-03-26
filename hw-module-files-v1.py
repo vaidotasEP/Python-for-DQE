@@ -65,3 +65,4 @@ while True:      # we start an "infinite loop", which can be terminated by press
     if txt:
         counter.add_words(txt)
         counter.csv_update_counts()
+
