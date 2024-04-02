@@ -36,7 +36,7 @@ class NewsFromFile(PostBase):
                 return err
             else:
                 txt = f.read()
-                pattern = re.compile(fr'post:\s?((?:\r\n.+)+)\r\n*')
+                pattern = re.compile(fr'post:\s?((?:\r\n.+)+)\r\n*', re.UNICODE)
                 self.content = re.findall(pattern, txt)
                 return "Ok"
 

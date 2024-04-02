@@ -49,10 +49,12 @@ def list_words(txt: str):
     # -  preceded by 1 or few whitespace symbols
     # -  may consist of one or more letters of any case, numbers from 0 to 9, "-" and "_" symbols
     # -  trailed by one or more sentence ending symbols "." "?" "!"
-    pattern = re.compile(r'[\[\(\s]*([a-zA-Z0-9-_]+)[ \],.?!]*')
-    return re.findall(pattern, txt)                 # find all words matching the pattern
-                                                    # store results in the list
 
+    # pattern = re.compile(r'[\[\(\s]*([a-zA-Z0-9-_]+)[ \],.?!]*')
+    # return re.findall(pattern, txt)                 # find all words matching the pattern
+    #                                                 # store results in the list
+
+    return re.split(r'[\d\W_-]+', txt)           # split by non-alphanumeric characters
 
 @contextmanager
 def opened_w_error(filename: str, mode: str = "a", newline: str = ''):

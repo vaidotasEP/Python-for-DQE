@@ -1,4 +1,5 @@
 import csv
+# import unicodecsv as csv
 import string
 from collections import defaultdict
 from utility_funcs import list_words, read_posts_from_file, opened_w_error
@@ -43,7 +44,9 @@ class BaseCounter:
         lines = txt.split('\n')
         words = []
         for line in lines:
-            words.extend(list_words(line))
+            for word in list_words(line):
+                if word:
+                    words.extend([word])
         self.word_list.extend(words)
         self.count_words(words)
         self.count_letters(words)
@@ -67,21 +70,19 @@ class BaseCounter:
                 else:
                     letter_counts[letter] += 1
 
-        for c in string.ascii_lowercase:
-            if c in letter_counts.keys():
-                if c not in self.letter_results:
-                    self.letter_results[c][0] = letter_counts[c]
-                else:
-                    self.letter_results[c][0] += letter_counts[c]
+        for c in letter_counts.keys():
+            if c == c.lower() and c not in self.letter_results:
+                self.letter_results[c][0] = letter_counts[c]
+            else:
+                self.letter_results[c][0] += letter_counts[c]
 
-        for c in string.ascii_uppercase:
-            if c in letter_counts.keys():
-                if c.lower() not in self.letter_results:
-                    self.letter_results[c.lower()][0] = letter_counts[c]
-                    self.letter_results[c.lower()][1] = letter_counts[c]
-                else:
-                    self.letter_results[c.lower()][0] += letter_counts[c]  #self.letter_results[c.lower()][0] + letter_counts[c]
-                    self.letter_results[c.lower()][1] += letter_counts[c]
+        for c in letter_counts.keys():
+            if c == c.upper() and c.lower() not in self.letter_results:
+                self.letter_results[c.lower()][0] = letter_counts[c]
+                self.letter_results[c.lower()][1] = letter_counts[c]
+            else:
+                self.letter_results[c.lower()][0] += letter_counts[c]  #self.letter_results[c.lower()][0] + letter_counts[c]
+                self.letter_results[c.lower()][1] += letter_counts[c]
 
         for k, v in self.letter_results.items():
             self.tot_letter_count += v[0]
@@ -90,20 +91,17 @@ class BaseCounter:
             self.letter_results[k][2] = round(v[0] * 100 / self.tot_letter_count, 2)
 
 
-    def csv_write(self, rows_of_data: [dict], headers: [str], filename: str):
-        # with open(filename, 'w', newline='') as f:
+    def csv_write(self, rows_of_data: [dict], headers: [str], filename: str, need_header: bool):
         with opened_w_error(filename, 'w', newline='') as (f, err):
             if err:
                 print(f'IOError: {err}')
             else:
                 csv_writer = csv.DictWriter(
                     f,
-                    fieldnames=headers,
-                    # delimiter=';',
-                    # quotechar="'",
-                    # quoting=csv.QUOTE_ALL
+                    fieldnames=headers
                 )
-                csv_writer.writeheader()
+                if need_header:
+                    csv_writer.writeheader()
                 for row in rows_of_data:
                     csv_writer.writerow(row)
 
@@ -119,7 +117,8 @@ class BaseCounter:
         self.csv_write(
             rows_of_data=rows_of_data,
             headers=headers,
-            filename='word-count.csv'
+            filename='word-count.csv',
+            need_header=False
         )
 
 
@@ -136,7 +135,8 @@ class BaseCounter:
         self.csv_write(
             rows_of_data=rows_of_data,
             headers=headers,
-            filename='letter-counts.csv'
+            filename='letter-counts.csv',
+            need_header=True
         )
 
 
