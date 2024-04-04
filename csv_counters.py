@@ -35,7 +35,6 @@ class BaseCounter:
     def __init__(self):
         self.word_list = []
         self.word_counts = {}
-        # self.letter_counts = {}
         self.letter_results = defaultdict(lambda: [0, 0, 0.0])
         self.tot_letter_count = 0
 
@@ -65,24 +64,27 @@ class BaseCounter:
         letter_counts = {}
         for word in word_list:
             for letter in word:
+                if letter in ["'", "-"]:
+                    continue
                 if letter not in letter_counts:
                     letter_counts[letter] = 1
                 else:
                     letter_counts[letter] += 1
 
         for c in letter_counts.keys():
-            if c == c.lower() and c not in self.letter_results:
-                self.letter_results[c][0] = letter_counts[c]
-            else:
-                self.letter_results[c][0] += letter_counts[c]
+            if c == c.lower():
+                if c not in self.letter_results:
+                    self.letter_results[c][0] = letter_counts[c]
+                else:
+                    self.letter_results[c][0] += letter_counts[c]
 
-        for c in letter_counts.keys():
-            if c == c.upper() and c.lower() not in self.letter_results:
-                self.letter_results[c.lower()][0] = letter_counts[c]
-                self.letter_results[c.lower()][1] = letter_counts[c]
-            else:
-                self.letter_results[c.lower()][0] += letter_counts[c]  #self.letter_results[c.lower()][0] + letter_counts[c]
-                self.letter_results[c.lower()][1] += letter_counts[c]
+            elif c == c.upper():
+                if c.lower() not in self.letter_results:
+                    self.letter_results[c.lower()][0] = letter_counts[c]
+                    self.letter_results[c.lower()][1] = letter_counts[c]
+                else:
+                    self.letter_results[c.lower()][0] += letter_counts[c]
+                    self.letter_results[c.lower()][1] += letter_counts[c]
 
         for k, v in self.letter_results.items():
             self.tot_letter_count += v[0]
@@ -107,12 +109,11 @@ class BaseCounter:
 
 
     def csv_write_words(self):
-        headers = ['word', 'count']
+        headers = ['word-count']
         rows_of_data = []
         for key, value in self.word_counts.items():
             rows_of_data.append({
-                headers[0]: key,
-                headers[1]: value
+                headers[0]: f'{key}-{value}'
             })
         self.csv_write(
             rows_of_data=rows_of_data,
@@ -125,12 +126,13 @@ class BaseCounter:
     def csv_write_letters(self):
         headers = ['letter', 'count_all', 'count_uppercase', 'percentage']
         rows_of_data = []
-        for key, value_arr in self.letter_results.items():
+
+        for key in sorted(self.letter_results.keys()):
             rows_of_data.append({
                 headers[0]: key,
-                headers[1]: value_arr[0],
-                headers[2]: value_arr[1],
-                headers[3]: value_arr[2],
+                headers[1]: self.letter_results[key][0],
+                headers[2]: self.letter_results[key][1],
+                headers[3]: self.letter_results[key][2],
             })
         self.csv_write(
             rows_of_data=rows_of_data,

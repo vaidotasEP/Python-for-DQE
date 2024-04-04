@@ -255,3 +255,71 @@ Išėjau ir parėjau. Ačiū
 Šeduva
 Šeduva, 2024-04-02
 
+.....[News].....
+Išėjau ir parėjau. Ačiū что-то
+Šeduva, 2024-04-03
+
+.....[News].....
+Išėjau ir parėjau. Ačiū. Что-то
+Šeduva, 2024-04-03
+
+.....[News].....
+Išėjau ir parėjau. Ačiū. Что-то
+Šeduva, 2024-04-03
+
+.....[News].....
+Išėjau ir parėjau. Ačiū. Что-то, it's a wonderful words' world.
+Šeduva, 2024-04-03
+
+.....[News].....
+Išėjau ir parėjau. Ačiū. Что-то, it's a wonderful words' world.
+Šeduva, 2024-04-03
+
+.....[News].....
+Išėjau ir parėjau. Ačiū. Что-то, it's a wonderful words' world.
+Šeduva, 2024-04-03
+
+.....[News].....
+Išėjau ir parėjau. Ačiū. Что-то, it's a wonderful words' world.
+Šeduva, 2024-04-03
+
+.....[News].....
+Išėjau ir parėjau. Ačiū. Что-то, it's a wonderful words' world.
+Šeduva=klaipėdėlė, 2024-04-03
+
+.....[News].....
+Išėjau ir parėjau. Ačiū. Что-то, it's a wonderful words' world.
+Šeduva=klaipėdėlė, 2024-04-03
+
+.....[News].....
+Išėjau ir parėjau. Ačiū. Что-то, it's a wonderful words' world.
+Šeduva=klaipėdėlė, 2024-04-03
+
+.....[News].....
+Išėjau ir parėjau. Ačiū. Что-то, it's a wonderful words' world.
+Šeduva=klaipėdėlė, 2024-04-03
+
+.....[News].....
+Išėjau ir parėjau(ar tikrai)aš[jūsų]. Ačiū. Что-то, it's a wonderful worlds' world.
+Šeduva=klaipėdėlė, 2024-04-03
+
+.....[News].....
+Išėjau ir parėjau(ar tikrai)aš[jūsų]. Ačiū. Что-то, it's a wonderful worlds' world.
+Šeduva=klaipėdėlė, 2024-04-04
+
+.....[News].....
+Qqqqqq išėjau ir parėjau(ar tikrai)aš[jūsų]. Ačiū. Что-то, it's a wonderful worlds' world.
+Šeduva=klaipėdėlė, 2024-04-04
+
+.....[News].....
+Išėjau ir parėjau(ar tikrai)aš[jūsų]. Ačiū. Что-то, it's a wonderful worlds' world.
+Šeduva=klaipėdėlė, 2024-04-04
+
+.....[News].....
+Išėjau ir parėjau(ar tikrai)aš[jūsų]. Ačiū. Что-то, it's a wonderful worlds' world.
+Qqqqqqq, 2024-04-04
+
+.....[News].....
+        print(self.letter_results)
+        print(self.letter_results), 2024-04-04
+

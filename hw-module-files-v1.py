@@ -19,7 +19,7 @@ def show_menu() -> None:
     print(f'3 - Create "Word of the Day"')
     print(f'4 - Import post(s) from .txt file')
     print(f'5 - Import post(s) from .json file')
-    print(f'6 - Import post(s) from .xml file')
+    # print(f'6 - Import post(s) from .xml file')
     print()
     print(f'Q - Quit')
     print('-------------------------------------------')
@@ -60,10 +60,10 @@ while True:      # we start an "infinite loop", which can be terminated by press
         newsFromJSON.ask_required_data()
         if newsFromJSON.read_posts_from_json() == "Ok":
             txt = newsFromJSON.publish(newsPost, privateAd, wordOTD)
-    elif user_input == "6":
-        newsFromXML.ask_required_data()
-        if newsFromXML.read_posts_from_xml() == "Ok":
-            txt = newsFromXML.publish(newsPost, privateAd, wordOTD)
+    # elif user_input == "6":
+    #     newsFromXML.ask_required_data()
+    #     if newsFromXML.read_posts_from_xml() == "Ok":
+    #         txt = newsFromXML.publish(newsPost, privateAd, wordOTD)
     elif user_input.upper() == "Q":
         break
     else:

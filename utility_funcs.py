@@ -35,6 +35,11 @@ def normalize_case(txt: str):
     return pattern.sub(make_upper, tmp_string)   # substitute matches with the result of the
 
 
+def split(delimiters: [str], string: str, maxsplit: int=0):
+    regex_pattern = '|'.join(map(re.escape, delimiters))
+    return re.split(regex_pattern, string, maxsplit)
+
+
 def list_words(txt: str):
     """
         Return a list words. Each word is the last words of each sentence in the given text.
@@ -44,17 +49,27 @@ def list_words(txt: str):
         Returns:
             list of strings, each string is a word, last word of each sentence
     """
-    # Compile regex pattern. The pattern looks for the last word in a sentence.
-    # It is:
-    # -  preceded by 1 or few whitespace symbols
-    # -  may consist of one or more letters of any case, numbers from 0 to 9, "-" and "_" symbols
-    # -  trailed by one or more sentence ending symbols "." "?" "!"
+    new_words = []
+    resulting_wordlist = []
+    pattern = re.compile(r"([\w'-_]+)")
+    words = re.findall(pattern, txt)
 
-    # pattern = re.compile(r'[\[\(\s]*([a-zA-Z0-9-_]+)[ \],.?!]*')
-    # return re.findall(pattern, txt)                 # find all words matching the pattern
-    #                                                 # store results in the list
+    delimiters = [';', ',', '[', ']', '(', ')', '=', '_', '.']
 
-    return re.split(r'[\d\W_-]+', txt)           # split by non-alphanumeric characters
+    for word in words:
+        split_words = split(delimiters, word)
+        for str1 in split_words:
+            if str1:
+                new_words.append(str1)
+
+    pattern = re.compile(r"[ ;:,.?!=\[\]\(\)]*")
+    for word in new_words:
+        if word[0].isalpha():
+            new_word = re.sub(pattern, '', word)
+            resulting_wordlist.append(new_word)
+
+    return resulting_wordlist
+
 
 @contextmanager
 def opened_w_error(filename: str, mode: str = "a", newline: str = ''):
