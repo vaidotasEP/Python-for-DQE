@@ -77,9 +77,10 @@ class News(PostBase):
     def __init__(self):
         self.post_type = 'News'
 
-    def ask_required_data(self):
+    def ask_required_data(self, filename: str = '') -> (str, str):
         self.text = input("Please enter news text: ")
         self.city = input("Please enter the name of the city: ")
+        return '', ''
 
     def publish(self):
         header = f'.....[{self.post_type}].....'

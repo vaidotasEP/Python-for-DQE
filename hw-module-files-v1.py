@@ -1,5 +1,5 @@
 from news_posts import News, PrivateAd, WordOfTheDay
-from news_from_file import NewsFromFile
+from news_from_txt import NewsFromTXT
 from news_from_json import NewsFromJSON
 from news_from_xml import NewsFromXML
 from utility_funcs import read_posts_from_file
@@ -19,7 +19,7 @@ def show_menu() -> None:
     print(f'3 - Create "Word of the Day"')
     print(f'4 - Import post(s) from .txt file')
     print(f'5 - Import post(s) from .json file')
-    # print(f'6 - Import post(s) from .xml file')
+    print(f'6 - Import post(s) from .xml file')
     print()
     print(f'Q - Quit')
     print('-------------------------------------------')
@@ -30,7 +30,7 @@ def show_menu() -> None:
 newsPost = News()
 privateAd = PrivateAd()
 wordOTD = WordOfTheDay()
-newsFromFile = NewsFromFile()
+newsFromTXT = NewsFromTXT()
 newsFromJSON = NewsFromJSON()
 newsFromXML = NewsFromXML()
 
@@ -53,17 +53,17 @@ while True:      # we start an "infinite loop", which can be terminated by press
         wordOTD.ask_required_data()
         txt = wordOTD.publish()
     elif user_input == "4":
-        newsFromFile.ask_required_data()
-        if newsFromFile.read_posts_from_file() == "Ok":
-            txt = newsFromFile.publish(newsPost, privateAd, wordOTD)
+        newsFromTXT.ask_required_data()
+        if newsFromTXT.read_posts_from_file() == "Ok":
+            txt = newsFromTXT.publish(newsPost, privateAd, wordOTD)
     elif user_input == "5":
         newsFromJSON.ask_required_data()
-        if newsFromJSON.read_posts_from_json() == "Ok":
+        if newsFromJSON.read_posts_from_file() == "Ok":
             txt = newsFromJSON.publish(newsPost, privateAd, wordOTD)
-    # elif user_input == "6":
-    #     newsFromXML.ask_required_data()
-    #     if newsFromXML.read_posts_from_xml() == "Ok":
-    #         txt = newsFromXML.publish(newsPost, privateAd, wordOTD)
+    elif user_input == "6":
+        newsFromXML.ask_required_data()
+        if newsFromXML.read_posts_from_file() == "Ok":
+            txt = newsFromXML.publish(newsPost, privateAd, wordOTD)
     elif user_input.upper() == "Q":
         break
     else:
@@ -72,4 +72,3 @@ while True:      # we start an "infinite loop", which can be terminated by press
     if txt:
         counter.add_words(txt)
         counter.csv_update_counts()
-
