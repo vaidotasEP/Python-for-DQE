@@ -1,6 +1,8 @@
 import os
 from news_posts import PostBase
 from abc import abstractmethod
+from dbconnection import DBConnection
+
 
 class NewsFromFile(PostBase):
     """
@@ -57,8 +59,7 @@ class NewsFromFile(PostBase):
 
         return self.input_format, self.path_to_input_file
 
-
-    def publish(self, *args):
+    def publish(self, dbcon: DBConnection, *args):
         newsPost, privateAd, wordOTD = args
         i = 0
         txt = ''
@@ -68,7 +69,7 @@ class NewsFromFile(PostBase):
                 if element['type'].strip().lower() == 'news':
                     newsPost.text = element['body'].strip()
                     newsPost.city = element['city'].strip()
-                    txt = newsPost.publish()
+                    txt = newsPost.publish(dbcon)
                     self.content.pop(i)
                 elif element['type'].strip().lower() == 'private ad':
                     privateAd.text = element['body'].strip()
@@ -80,12 +81,12 @@ class NewsFromFile(PostBase):
                         i += 1
                         continue
                     else:
-                        txt = privateAd.publish()
+                        txt = privateAd.publish(dbcon)
                         self.content.pop(i)
                 elif element['type'].strip().lower() == 'word of the day':
                     wordOTD.word = element['word'].strip()
                     wordOTD.meaning = element['meaning'].strip()
-                    txt = wordOTD.publish()
+                    txt = wordOTD.publish(dbcon)
                     self.content.pop(i)
                 else:
                     i += 1

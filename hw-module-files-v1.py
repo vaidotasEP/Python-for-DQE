@@ -4,7 +4,7 @@ from news_from_json import NewsFromJSON
 from news_from_xml import NewsFromXML
 from utility_funcs import read_posts_from_file
 from csv_counters import BaseCounter
-
+from dbconnection import DBConnection
 
 def show_menu() -> None:
     """
@@ -39,31 +39,33 @@ content = read_posts_from_file('newsfeed.txt')
 counter.add_words(content)
 counter.csv_update_counts()
 
+dbcon = DBConnection('newsfeed.db')
+
 while True:      # we start an "infinite loop", which can be terminated by pressing "Q"
     txt = ''
     show_menu()
     user_input = input("\nPlease enter your choice: ")
     if user_input == "1":
         newsPost.ask_required_data()
-        txt = newsPost.publish()
+        txt = newsPost.publish(dbcon)
     elif user_input == "2":
         privateAd.ask_required_data()
-        txt = privateAd.publish()
+        txt = privateAd.publish(dbcon)
     elif user_input == "3":
         wordOTD.ask_required_data()
-        txt = wordOTD.publish()
+        txt = wordOTD.publish(dbcon)
     elif user_input == "4":
         newsFromTXT.ask_required_data()
         if newsFromTXT.read_posts_from_file() == "Ok":
-            txt = newsFromTXT.publish(newsPost, privateAd, wordOTD)
+            txt = newsFromTXT.publish(dbcon, newsPost, privateAd, wordOTD)
     elif user_input == "5":
         newsFromJSON.ask_required_data()
         if newsFromJSON.read_posts_from_file() == "Ok":
-            txt = newsFromJSON.publish(newsPost, privateAd, wordOTD)
+            txt = newsFromJSON.publish(dbcon, newsPost, privateAd, wordOTD)
     elif user_input == "6":
         newsFromXML.ask_required_data()
         if newsFromXML.read_posts_from_file() == "Ok":
-            txt = newsFromXML.publish(newsPost, privateAd, wordOTD)
+            txt = newsFromXML.publish(dbcon, newsPost, privateAd, wordOTD)
     elif user_input.upper() == "Q":
         break
     else:
@@ -72,3 +74,5 @@ while True:      # we start an "infinite loop", which can be terminated by press
     if txt:
         counter.add_words(txt)
         counter.csv_update_counts()
+
+dbcon.close_db_connection()

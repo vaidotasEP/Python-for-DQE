@@ -10,6 +10,7 @@ import re                              # import regular expression module. Used 
 
 from utility_funcs import normalize_case, opened_w_error
 
+
 class PostBase(ABC):
     """
     A base class of a newsfeed Post. We use AMC to make it an abstract class.
@@ -38,7 +39,7 @@ class PostBase(ABC):
         pass
 
     @abstractmethod
-    def publish(self) -> str:
+    def publish(self, *args) -> str:
         """
         Abstract method to publish post to the newsfeed.
         Returns:
@@ -82,13 +83,24 @@ class News(PostBase):
         self.city = input("Please enter the name of the city: ")
         return '', ''
 
-    def publish(self):
+    def publish(self, dbcon):
         header = f'.....[{self.post_type}].....'
-        body = f'{normalize_case(self.text)}\n{normalize_case(self.city)}, {self.date:%Y-%m-%d}'
+        post_text = f'{normalize_case(self.text)}'
+        post_city = f'{normalize_case(self.city)}'
+        post_text = post_text.replace("'", "''")
+        post_city = post_city.replace("'", "''")
+
+        body = f'{post_text}\n{post_city}, {self.date:%Y-%m-%d}'
         self.post_to_newsfeed(
             header=header,
             body=body
         )
+
+        data = {
+            'body': post_text,
+            'city': post_city
+        }
+        dbcon.insert('news', data)
         return f'{header}\n{body}'
 
 
@@ -139,14 +151,24 @@ class PrivateAd(PostBase):
             else:
                 break
 
-    def publish(self):
+    def publish(self, dbcon):
         delta = self.expiration_date - datetime.date.today()
         header = f'.....[{self.post_type}].....'
-        body = f'{normalize_case(self.text)}\nActual until: {self.expiration_date:%Y-%m-%d}, {delta.days} days left'
+        post_text = f'{normalize_case(self.text)}'
+        post_expiration_date = f'{self.expiration_date:%Y-%m-%d}'
+        post_text = post_text.replace("'", "''")
+
+        body = f'{post_text}\nActual until: {post_expiration_date}, {delta.days} days left'
         self.post_to_newsfeed(
             header=header,
             body=body
         )
+
+        data = {
+            'body': post_text,
+            'expiration_date': post_expiration_date
+        }
+        dbcon.insert('ads', data)
         return f'{header}\n{body}'
 
 
@@ -173,12 +195,23 @@ class WordOfTheDay(PostBase):
         self.word = input("Enter word of the day: ")
         self.meaning = input(f'Enter the definition for "{self.word}": ')
 
-    def publish(self, *args):
+    def publish(self, dbcon):
         day_of_year = self.date.timetuple().tm_yday  # we calculate day of year
         header = f'.....[{self.post_type}].....'
-        body = f'Word #{day_of_year}\nWord: {normalize_case(self.word)}\nMeaning: {normalize_case(self.meaning)}'
+        post_word = f'{normalize_case(self.word)}'
+        post_meaning = f'{normalize_case(self.meaning)}'
+        post_word = post_word.replace("'", "''")
+        post_meaning = post_meaning.replace("'", "''")
+
+        body = f'Word #{day_of_year}\nWord: {post_word}\nMeaning: {post_meaning}'
         self.post_to_newsfeed(
             header=header,
             body=body
         )
+
+        data = {
+            'word': post_word,
+            'meaning': post_meaning
+        }
+        dbcon.insert('words', data)
         return f'{header}\n{body}'

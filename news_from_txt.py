@@ -4,6 +4,7 @@ from news_posts import PostBase
 from news_from_file import NewsFromFile
 from utility_funcs import opened_w_error
 from datetime import datetime
+from dbconnection import DBConnection
 
 
 class NewsFromTXT(NewsFromFile):
@@ -56,7 +57,7 @@ class NewsFromTXT(NewsFromFile):
     def ask_required_data(self, filename: str = ''):
         self.input_format, self.path_to_input_file = super().ask_required_data(self.path_to_input_file)
 
-    def publish(self, *args):
+    def publish(self, dbcon: DBConnection, *args):
         newsPost, privateAd, wordOTD = args
         i = 0
         txt = ''
@@ -75,7 +76,7 @@ class NewsFromTXT(NewsFromFile):
                 if news:
                     newsPost.text = news[0][1].strip()
                     newsPost.city = news[0][2].strip()
-                    txt = newsPost.publish()
+                    txt = newsPost.publish(dbcon)
                     self.content.pop(i)
                 elif ads:
                     privateAd.text = ads[0][1].strip()
@@ -87,12 +88,12 @@ class NewsFromTXT(NewsFromFile):
                         i += 1
                         continue
                     else:
-                        txt = privateAd.publish()
+                        txt = privateAd.publish(dbcon)
                         self.content.pop(i)
                 elif words:
                     wordOTD.word = words[0][1].strip()
                     wordOTD.meaning = words[0][2].strip()
-                    txt = wordOTD.publish()
+                    txt = wordOTD.publish(dbcon)
                     self.content.pop(i)
                 else:
                     i += 1

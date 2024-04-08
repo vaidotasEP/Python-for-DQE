@@ -53,53 +53,50 @@ class NewsFromJSON(NewsFromFile):
                 json.dump(posts, f)
 
     def ask_required_data(self, filename: str = ''):
-        print('AAAAA')
         self.input_format, self.path_to_input_file = super().ask_required_data(self.path_to_input_file)
-        print(self.input_format, self.path_to_input_file)
-        print('BBBBB')
 
-    def publish(self, *args):
-        newsPost, privateAd, wordOTD = args
-        i = 0
-        txt = ''
-        try:
-            while i < len(self.content):
-                element = self.content[i]
-                if element['type'].strip().lower() == 'news':
-                    newsPost.text = element['body'].strip()
-                    newsPost.city = element['city'].strip()
-                    txt = newsPost.publish()
-                    self.content.pop(i)
-                elif element['type'].strip().lower() == 'private ad':
-                    privateAd.text = element['body'].strip()
-                    date_entry = element['expiration'].strip()
-                    try:
-                        privateAd.validate_expiration_date(date_entry)  # validate expiration date
-                    except ValueError as err:
-                        print(f'\nWarning: {err}\n')
-                        i += 1
-                        continue
-                    else:
-                        txt = privateAd.publish()
-                        self.content.pop(i)
-                elif element['type'].strip().lower() == 'word of the day':
-                    wordOTD.word = element['word'].strip()
-                    wordOTD.meaning = element['meaning'].strip()
-                    txt = wordOTD.publish()
-                    self.content.pop(i)
-                else:
-                    i += 1
-                    continue
-                if self.input_format == "1":
-                    break
-        except (ValueError, IndexError) as err:
-            print(f'Error: {err}\n')
-        else:
-            if (len(self.content) > 0) and (self.input_format != "1"):
-                print(
-                    f'Warning: some records were not posted to the newsfeed. They were coppied to `invalid_posts.json` file) \n')
-                self.write_erroneous_post_to_file(self.content)
-            if i >= len(self.content):
-                print(f'All valid posts were published. Deleting the file `{self.path_to_input_file}`\n\n')
-                self.delete_obsolete_input_file(self.path_to_input_file)
-        return txt
+    # def publish(self, dbcon: DBConnection, *args):
+    #     newsPost, privateAd, wordOTD = args
+    #     i = 0
+    #     txt = ''
+    #     try:
+    #         while i < len(self.content):
+    #             element = self.content[i]
+    #             if element['type'].strip().lower() == 'news':
+    #                 newsPost.text = element['body'].strip()
+    #                 newsPost.city = element['city'].strip()
+    #                 txt = newsPost.publish(dbcon)
+    #                 self.content.pop(i)
+    #             elif element['type'].strip().lower() == 'private ad':
+    #                 privateAd.text = element['body'].strip()
+    #                 date_entry = element['expiration'].strip()
+    #                 try:
+    #                     privateAd.validate_expiration_date(date_entry)  # validate expiration date
+    #                 except ValueError as err:
+    #                     print(f'\nWarning: {err}\n')
+    #                     i += 1
+    #                     continue
+    #                 else:
+    #                     txt = privateAd.publish(dbcon)
+    #                     self.content.pop(i)
+    #             elif element['type'].strip().lower() == 'word of the day':
+    #                 wordOTD.word = element['word'].strip()
+    #                 wordOTD.meaning = element['meaning'].strip()
+    #                 txt = wordOTD.publish(dbcon)
+    #                 self.content.pop(i)
+    #             else:
+    #                 i += 1
+    #                 continue
+    #             if self.input_format == "1":
+    #                 break
+    #     except (ValueError, IndexError) as err:
+    #         print(f'Error: {err}\n')
+    #     else:
+    #         if (len(self.content) > 0) and (self.input_format != "1"):
+    #             print(
+    #                 f'Warning: some records were not posted to the newsfeed. They were coppied to `invalid_posts.json` file) \n')
+    #             self.write_erroneous_post_to_file(self.content)
+    #         if i >= len(self.content):
+    #             print(f'All valid posts were published. Deleting the file `{self.path_to_input_file}`\n\n')
+    #             self.delete_obsolete_input_file(self.path_to_input_file)
+    #     return txt
