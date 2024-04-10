@@ -21,6 +21,9 @@ class DBConnection:
         table_exists(table_name: str) -> bool: returns True if a table with the given name exists within the database,
             returns False otherwise.
         close_db_connection(): cleanup - close database cursor and close the database object
+
+        find_city(table_name: str, city: str): returns records if a given table exists in the database, and it contains
+            an entry for a given city
     """
 
     def __init__(self, database_name: str):
@@ -31,6 +34,15 @@ class DBConnection:
         if self.table_exists(table_name):
             print(f"The table '{table_name}' exists.")
             self.cur.execute(f'select * from {table_name};')
+            return self.cur.fetchall()
+        else:
+            print(f"The table '{table_name}' does not exist.")
+            return None
+
+    def find_city(self, table_name: str, city: str) -> [tuple]:
+        if self.table_exists(table_name):
+            # print(f"The table '{table_name}' exists.")
+            self.cur.execute(f"SELECT * FROM {table_name} WHERE city='{city}';")
             return self.cur.fetchall()
         else:
             print(f"The table '{table_name}' does not exist.")
